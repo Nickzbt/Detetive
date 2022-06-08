@@ -44,7 +44,24 @@
 """
 
 import json
+import os
 
+msg_init = ("""|----------------------------------------JOGO DE DETETIVE----------------------------------------|
+    Assalto ao banco ocorrido durante a noite entre 8 PM e 5 AM, onde o alarme não foi 
+    tocado e câmeras de segurança foram desligadas, descubra através das pistas quem 
+    é o culpado pelo crime, baseando-se nos álibis dados pelos suspeitos do crime.
+""")
+
+msg_rules = ("""|-----------------------------------------REGRAS DO JOGO-----------------------------------------|
+    -> O jogo possuí até 4 etapas, cada qual será dada ao jogador um conjunto de hipoteses/pistas
+    -> Em cada etapa há a chance de se apontar o culpado ou passar para a próxima
+    -> Acertando o culpado o jogo acaba (valendo mais ou menos pontos de acordo com a etapa)
+    -> Errando o culpado serão retiradas 2 pistas da etapa seguinte
+    -> Há 7 suspeitos total, inicialmente todos são igualmente suspeitos
+    -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente
+    -> Há um total de 22 proposições baseadas nos álibis obtidos
+    -> Apenas um dos suspeitos é o culpado.
+""")
 
 suspects = (
     "Guarda 1",
@@ -78,32 +95,21 @@ propos: tuple[dict[str, float]] = (
     {"text": f"{suspects[1]}: Depois da queda de luz foi fazer uma ronda no banco.", "time": 12},
     {"text": f"{suspects[0]}: Ligou o gerador reserva as 12:30 PM, e as câmeras voltaram 30 min depois.", "time": 12.3},
     {"text": f"{suspects[2]}: Foi para casa após a volta da energia às 2 AM.", "time": 12+2},
-    {"text": f"{suspects[1]}: Desligou o gerador depois da volda da energia.", "time": 12+2},
+    {"text": f"{suspects[1]}: Desligou o gerador depois da volta da energia.", "time": 12+2},
 )
+print(msg_init)
+choice = str(input("Digite [Y] para continuar ou [N] para fechar o programa:"))
+if choice.capitalize() != ('Y'):
+    os.system("cls")
+    exit()
 
-selected_hour = -1
-current_hour = 0
-
-count = 0
-
-while True:
-
-    if selected_hour > 0:
-        for p in propos:
-            if selected_hour == int(p["time"]):
-                time = 0
-                if int(p["time"]) > 12:
-                    time = 1
-
-                if count == 0:
-                    print()
-                    print(f"-- {selected_hour} {['PM', 'AM'][time]} --")
-                    count = 1
-                
-                print(f"* {p['text']}")
-            else:
-                selected_hour = 0
-                count = 0
-    else:
-       print("Olá escolha um horario:")
-       selected_hour = int(input())"""
+os.system("cls")
+print(msg_rules)
+choice = str(input("Digite [Y] para continuar ou [N] para fechar o programa:"))
+if choice.capitalize() != ('Y'):
+    os.system("cls")
+    exit()
+os.system("cls")
+print("Os suspeitos do crime são:")
+for i in suspects:
+    print("->" ,i)
