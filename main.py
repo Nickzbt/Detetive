@@ -1,7 +1,6 @@
 import json
 import os
 import random
-from xml.etree.ElementTree import SubElement
 
 suspects = [
     "Guarda 1 (G1)",
