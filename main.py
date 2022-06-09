@@ -3,6 +3,66 @@ import os
 import random
 import time
 
+prop = {
+    "A1-1":"saiu mais cedo as 7:15 PM.",
+    "A1-2":"Foi ao medico as 7:30 PM.",
+    "G1-1":"Fechou o banco as 8 PM.",
+    "G1-2":"Conferiu o quadro de luz apos a queda da luz.",
+    "G1-3":"Ligou o gerador de emergencia.",
+    "G2-1":"Verificou os ambientes internos.",
+    "G2-2":"Fez uma ronda no banco apos a queda da luz.",
+    "Z-1":"Chegou 8 PM para a limpeza.",
+    "Z-2":"Viu todos os funcionarios no banco.",
+    "A2-1":"Saiu junto de A3 as 8:20 PM.",
+    "A3-1":"Saiu junto de A2 as 8:20 PM.",
+    "GB-1":"Documentou valores até 9 PM.",
+    "GB-2":"Trancou o cofre 9 PM.",
+    "Q-1":"O cofre estava trancado.",
+    "Q-2":"Nao houve roubo.",
+    "L-1":"A luz caiu entre 12 PM e 2 AM.",
+    "C-1":"Não há cameras ligadas.",
+    "C-2":"Cameras voltaram 30 min após ligar o gerador."
+}
+
+r1 = ("""
+    (A1-2 -> A1-1)
+    (Z-2 -> Z-1)
+    (~A1-1 v ~Z-1)
+    ---------------
+    (~A1-2 v ~Z-2)
+""")
+r2 = ("""
+    (~A1-2 v ~Z-2)
+    (Z-2)
+    ---------------
+    A1-2
+""")
+r3 = ("""
+    (Q-1 -> Q-2)
+    (GB-1 -> GB-2)
+    (~Q-2 v ~GB-2)
+    ---------------
+    (~Q-1 v ~GB-1)
+""")
+r4 = ("""
+    (~Q-1 v ~GB-1)
+    (GB-1)
+    ---------------
+    (~Q-1)
+""")
+r5 = ("""
+    (L-1 -> C-1)
+    (L-1)
+    ---------------
+    (C-1)
+""")
+r6 = ("""
+    (G1-3 -> C-2)
+    (G1-3)
+    ---------------
+    (C-2)
+""")
+
 suspects = [
     "Guarda 1 (G1)",
     "Guarda 2 (G2)",
@@ -14,28 +74,27 @@ suspects = [
     ]
 
 clues = [
-    "(P1)  Se A1 foi ao médico 7:30PM, então A1 saiu mais cedo as 7:15PM",
-    "(P2)  Se Z viu todos os funcionário, então Z chegou as 8PM",
-    "(P3)  Ou A1 saiu mais cedo ou Z chegou as 8PM",
-    "(P4)  Z chegou as 8 PM",
-    "(P5)  Z viu todos os funcionários",
-    "(P6)  Se G1 fechou o banco, entao G2 verificou os ambientes internos",
-    "(P7)  Se A2 saiu as 8:20PM, entao A3 saiu com ele",
-    "(P8)  A2 saiu 8:20 PM",
-    "(P9)  Se o cofre estava trancado, entao nao houve roubo",
-    "(P10) Se GB documentou os valores ate 9PM, entao GB trancou o cofre 9PM",
-    "(P11) Se o cofre estava trancado, entao nao houve roubo",
-    "(P12) Ou houve roubo ou GB nao documentou os valores",
-    "(P13) GB documentou os valores",
-    "(P14) Se a luz caiu, entao as cameras desligaram",
-    "(P15) A luz caiu entre 12PM e 2AM",
-    "(P16) Se a luz caiu, entao G1 verificou o quadro de luz",
-    "(P17) Se G1 verificou o quadro de luz, entao G1 ligou o gerador de emergencia",
-    "(P18) Se G1 ligou o gerador de emergencia, entao as cameras voltaram 1PM",
+    "(P1)  Se A1 foi ao médico 7:30 PM, então A1 saiu mais cedo as 7:15PM (A1-2 -> A1-1)",
+    "(P2)  Se Z viu todos os funcionário, então Z chegou as 8PM (Z-2 -> Z-1)",
+    "(P3)  Ou A1 saiu mais cedo ou Z chegou as 8PM (~A1-1 v ~Z-1)",
+    "(P4)  Z chegou as 8 PM (Z-1)",
+    "(P5)  Z viu todos os funcionários(Z-2)",
+    "(P6)  Se G1 fechou o banco, entao G2 verificou os ambientes internos (G1-1 -> G2-1)",
+    "(P7)  Se A2 saiu as 8:20 PM, entao A3 saiu com ele (A2-1 -> A3-1)",
+    "(P8)  A2 saiu 8:20 PM (A2-1)",
+    "(P9)  Se o cofre estava trancado, entao nao houve roubo (Q-1 -> Q-2)",
+    "(P10) Se GB documentou os valores ate 9 PM, entao GB trancou o cofre 9PM (GB-1 ->  GB-2)",
+    "(P11) Ou houve roubo ou GB nao documentou os valores (~Q-2 v ~GB--1)",
+    "(P12) GB documentou os valores (GB-1)",
+    "(P13) Se a luz caiu, entao as cameras desligaram (L-1 -> C1)",
+    "(P14) A luz caiu entre 12 PM e 2 AM (L-1)",
+    "(P15) Se a luz caiu, entao G1 verificou o quadro de luz (L-1 -> G1-2)",
+    "(P16) Se G1 verificou o quadro de luz, entao G1 ligou o gerador de emergencia (G1-2 -> G1-3)",
+    "(P17) Se G1 ligou o gerador de emergencia, entao as cameras voltaram 1 PM (G1-3 -> C-2)",
 ]
 
 msg_init = ("""|----------------------------------------JOGO DE DETETIVE----------------------------------------|
-    Assalto ao banco ocorrido durante a noite entre 8 PM e 5 AM, onde o alarme não foi 
+    Assalto ao banco ocorrido durante a noite entre 12 PM e 2 AM, onde o alarme não foi 
     tocado e câmeras de segurança foram desligadas, descubra através das pistas quem 
     é o culpado pelo crime, baseando-se nos álibis dados pelos suspeitos do crime.
 """)
@@ -48,7 +107,7 @@ msg_rules = ("""|-----------------------------------------REGRAS DO JOGO--------
     -> Errando o culpado serão retiradas 2 pistas da etapa seguinte
     -> Há 7 suspeitos total, inicialmente todos são igualmente suspeitos
     -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente
-    -> Há um total de 18 pistas baseadas nos álibis obtidos
+    -> Há um total de 17 pistas baseadas nos álibis obtidos
     -> Ao escolher apontar um suspeito, todas suas pistas serao exibidas para auxilia-lo, porem se
         errar perdera 2 pistas da etapa seguinte e diminuira 1 ponto possivel.
     -> Apenas um dos suspeitos é o culpado.
