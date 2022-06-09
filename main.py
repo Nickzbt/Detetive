@@ -11,20 +11,21 @@ prop = {
     "G1-3":"Ligou o gerador de emergencia.",
     "G2-1":"Verificou os ambientes internos.",
     "G2-2":"Fez uma ronda no banco apos a queda da luz.",
-    "Z-1":"Chegou 8 PM para a limpeza.",
-    "Z-2":"Viu todos os funcionarios no banco.",
+    "Z-1" :"Chegou 8 PM para a limpeza.",
+    "Z-2" :"Viu todos os funcionarios no banco.",
     "A2-1":"Saiu junto de A3 as 8:20 PM.",
     "A3-1":"Saiu junto de A2 as 8:20 PM.",
     "GB-1":"Documentou valores até 9 PM.",
     "GB-2":"Trancou o cofre 9 PM.",
-    "Q-1":"O cofre estava trancado.",
-    "Q-2":"Nao houve roubo.",
-    "L-1":"A luz caiu entre 12 PM e 2 AM.",
-    "C-1":"Não há cameras ligadas.",
-    "C-2":"Cameras voltaram 30 min após ligar o gerador."
+    "Q-1" :"O cofre estava trancado.",
+    "Q-2" :"Nao houve roubo.",
+    "L-1" :"A luz caiu entre 12 PM e 2 AM.",
+    "C-1" :"Não há cameras ligadas.",
+    "C-2" :"Cameras voltaram 30 min após ligar o gerador."
 }
 solution = [
     ("""
+    ----Dilema destrutivo----
         (A1-2 -> A1-1)
         (Z-2 -> Z-1)
         (~A1-1 v ~Z-1)
@@ -32,12 +33,14 @@ solution = [
         (~A1-2 v ~Z-2)
     """),
     ("""
+    ----Silogismo disjuntivo
         (~A1-2 v ~Z-2)
         (Z-2)
         ---------------
         A1-2
     """),
     ("""
+    ----Dilema destrutivo
         (Q-1 -> Q-2)
         (GB-1 -> GB-2)
         (~Q-2 v ~GB-2)
@@ -45,18 +48,21 @@ solution = [
         (~Q-1 v ~GB-1)
     """),
     ("""
+    ----Silogismo destrutivo
         (~Q-1 v ~GB-1)
         (GB-1)
         ---------------
         (~Q-1)
     """),
     ("""
+    ----Modus ponens----
         (L-1 -> C-1)
         (L-1)
         ---------------
         (C-1)
     """),
     ("""
+    ----Modus ponens----
         (G1-3 -> C-2)
         (G1-3)
         ---------------
@@ -111,7 +117,8 @@ msg_rules = ("""|-----------------------------------------REGRAS DO JOGO--------
     -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente
     -> Há um total de 17 pistas baseadas nos álibis obtidos
     -> Ao escolher apontar um suspeito, todas suas pistas serao exibidas para auxilia-lo, porem se
-        errar perdera 2 pistas da etapa seguinte e diminuira 1 ponto possivel.
+        errar perdera 2 pistas da etapa seguinte e diminuira 2 pontos possivel.
+    -> Ao pular para a próxima etapa, diminuirá 1 ponto possível.
     -> Apenas um dos suspeitos é o culpado.
 """)
 
@@ -288,10 +295,9 @@ if suspects[culpado] == "Atendente 1 (A1)":
 else:
     print("""Voce nao conseguiu adivinhar quem foi responsavel pelo crime.
     Tente novamente ou finalize o jogo para ver a solução.""")
-    choice = int(input("[1] para ver a solucao ou [0] para finalizar e ver a solução"))
+    choice = int(input("[1] para ver a solucao ou [0] para finalizar:"))
     if choice == 1:
         for i in solution:
             print(i)
     else:
         quit()
-
