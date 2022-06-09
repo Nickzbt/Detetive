@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import time
 
 suspects = [
     "Guarda 1 (G1)",
@@ -41,7 +42,7 @@ msg_init = ("""|----------------------------------------JOGO DE DETETIVE--------
 
 msg_rules = ("""|-----------------------------------------REGRAS DO JOGO-----------------------------------------|
     -> O jogo possuí até 4 etapas, cada qual será dada ao jogador um conjunto de hipoteses/pistas
-    -> As duas etapas iniciais fornecem 5 pistas cada, as duas ultimas fornecem 4
+    -> As tres etapas iniciais fornecem 4 pistas cada, a ultima etapa fornecera as pistas restantes
     -> Em cada etapa há a chance de se apontar o culpado ou passar para a próxima
     -> Acertando o culpado o jogo acaba (valendo mais ou menos pontos de acordo com a etapa)
     -> Errando o culpado serão retiradas 2 pistas da etapa seguinte
@@ -49,13 +50,16 @@ msg_rules = ("""|-----------------------------------------REGRAS DO JOGO--------
     -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente
     -> Há um total de 18 pistas baseadas nos álibis obtidos
     -> Ao escolher apontar um suspeito, todas suas pistas serao exibidas para auxilia-lo, porem se
-        errar perdera 2 pistas da etapa seguinte.
+        errar perdera 2 pistas da etapa seguinte e diminuira 1 ponto possivel.
     -> Apenas um dos suspeitos é o culpado.
 """)
 
 my_clues = []
 
-print(type(my_clues))
+score = 10
+
+os.system("cls")
+
 print(msg_init)
 choice = int(input("Digite [1] para continuar ou [0] para fechar o programa:"))
 if choice != (1):
@@ -78,11 +82,12 @@ choice = int(input("Digite [1] para continuar ou [0] para fechar o programa:"))
 if choice != (1):
     os.system("cls")
     exit()
+
 os.system("cls")
 
 print("|----------------------------------------ETAPA 1----------------------------------------|")
-print("As 5 pistas desta etapas são aleatorias, certifique-se de prestar atencao aos detalhes")
-for i in range (5):
+print("As 4 pistas desta etapas são aleatorias, certifique-se de prestar atencao aos detalhes\n")
+for i in range (4):
     item = random.choice(clues)
     clues.remove(item)
     my_clues.append(item)
@@ -91,45 +96,140 @@ for i in range (5):
 choice = int(input("Digite [1] para continuar ou [0] para apontar o culpado:"))
 if choice != (1):
     os.system("cls")
+    print("Suas pistas atuais são:")
+    for i in my_clues:
+        print(i)
+    print("\n")
     print("Informe quem roubou o banco:")
     for i in range(len(suspects)):
         print(f"({i}) {suspects[i]}")
     culpado = int(input("Insira o numero do culpado:"))
-    if culpado == 4:
+    if suspects[culpado] == "Atendente 1 (A1)":
+        os.system("cls")
         print("PARABENS VOCE ADIVINHOU QUEM E O RESPONSAVEL PELO CRIME!!!")
-        print("GANHOU O JOGO NA ETAPA 1, CONTABILIZANDO 5 PONTOS.")
+        print(f"GANHOU O JOGO NA ETAPA 1, CONTABILIZANDO {score} PONTOS.")
+        quit()
     else:
         for i in range (2):
             item = random.choice(clues)
             clues.remove(item)
         suspects.pop(culpado)
+        score = score - 2
         print("-> Voce errou o culpado, o indicado será removido da lista de suspeitos.")
         print("-> Duas pistas aleatorias foram removidas do banco de pistas.")
         print("-> Passando para a proxima etapa, boa sorte...")
+        time.sleep(5)
+else:
+    score = score - 1 
+
+os.system("cls")
 
 print("|----------------------------------------ETAPA 2----------------------------------------|")
-print("As 5 pistas desta etapas são aleatorias, certifique-se de prestar atencao aos detalhes")
-for i in range (5):
+print("As 4 pistas desta etapas são aleatorias, certifique-se de prestar atencao aos detalhes\n")
+for i in range (4):
     item = random.choice(clues)
     clues.remove(item)
     my_clues.append(item)
     print(f"->{item}")
 
 choice = int(input("Digite [1] para continuar ou [0] para apontar o culpado:"))
-if choice != ('1'):
+if choice != (1):
     os.system("cls")
+    print("Suas pistas atuais são:")
+    for i in my_clues:
+        print(i)
+    print("\n")
     print("Informe quem roubou o banco:")
     for i in range(len(suspects)):
         print(f"({i}) {suspects[i]}")
     culpado = int(input("Insira o numero do culpado:"))
-    if culpado == 4:
+    if suspects[culpado] == "Atendente 1 (A1)":
+        os.system("cls")
         print("PARABENS VOCE ADIVINHOU QUEM E O RESPONSAVEL PELO CRIME!!!")
-        print("GANHOU O JOGO NA ETAPA 1, CONTABILIZANDO 4 PONTOS.")
+        print(f"GANHOU O JOGO NA ETAPA 2, CONTABILIZANDO {score} PONTOS.")
+        quit()
     else:
         for i in range (2):
             item = random.choice(clues)
             clues.remove(item)
         suspects.pop(culpado)
+        score = score - 2
         print("-> Voce errou o culpado, o indicado será removido da lista de suspeitos.")
         print("-> Duas pistas aleatorias foram removidas do banco de pistas.")
         print("-> Passando para a proxima etapa, boa sorte...")
+        time.sleep(5)
+
+else:
+    score = score - 1 
+
+os.system("cls")
+
+print("|----------------------------------------ETAPA 3----------------------------------------|")
+print("As 4 pistas desta etapas são aleatorias, certifique-se de prestar atencao aos detalhes\n")
+for i in range (4):
+    item = random.choice(clues)
+    clues.remove(item)
+    my_clues.append(item)
+    print(f"->{item}")
+
+choice = int(input("Digite [1] para continuar ou [0] para apontar o culpado:"))
+if choice != (1):
+    os.system("cls")
+    print("Suas pistas atuais são:")
+    for i in my_clues:
+        print(i)
+    print("\n")
+    print("Informe quem roubou o banco:")
+    for i in range(len(suspects)):
+        print(f"({i}) {suspects[i]}")
+    culpado = int(input("Insira o numero do culpado:"))
+    if suspects[culpado] == "Atendente 1 (A1)":
+        os.system("cls")
+        print("PARABENS VOCE ADIVINHOU QUEM E O RESPONSAVEL PELO CRIME!!!")
+        print(f"GANHOU O JOGO NA ETAPA 3, CONTABILIZANDO {score} PONTOS.")
+        quit()
+    else:
+        for i in range (2):
+            item = random.choice(clues)
+            clues.remove(item)
+        suspects.pop(culpado)
+        score = score - 2
+        print("-> Voce errou o culpado, o indicado será removido da lista de suspeitos.")
+        print("-> Duas pistas aleatorias foram removidas do banco de pistas.")
+        print("-> Passando para a proxima etapa, boa sorte...")
+        time.sleep(5)
+
+else:
+    score = score - 1 
+
+os.system("cls")
+
+print("|----------------------------------------ETAPA 4----------------------------------------|")
+print("ATENÇAO!! Ultima etapa para adivinhar o suspeito, encontre o culpado ou o mesmo saira impune")
+print("Estas sao as ultimas pistas para que voce resolva o caso, preste atencao aos detalhes\n")
+for i in range (len(clues)):
+    item = random.choice(clues)
+    clues.remove(item)
+    my_clues.append(item)
+print("Suas pistas atuais são:")
+for i in my_clues:
+    print(i)
+print("\n")
+print("Informe quem roubou o banco:")
+for i in range(len(suspects)):
+    print(f"({i}) {suspects[i]}")
+culpado = int(input("Insira o numero do culpado:"))
+if suspects[culpado] == "Atendente 1 (A1)":
+    os.system("cls")
+    print("PARABENS VOCE ADIVINHOU QUEM E O RESPONSAVEL PELO CRIME!!!")
+    print(f"GANHOU O JOGO NA ETAPA 4, CONTABILIZANDO {score} PONTOS.")
+    quit()
+else:
+    print("""Voce nao conseguiu adivinhar quem foi responsavel pelo crime.
+    Tente novamente ou finalize o jogo para ver a solução.""")
+    choice = int(input("[1] para ver a solucao ou [0] para finalizar e ver a solução"))
+    if choice == 1:
+        None
+    else:
+        quit()
+
