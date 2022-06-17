@@ -14,7 +14,7 @@ msg_rules = ("""|-----------------------------------------REGRAS DO JOGO--------
     -> Acertando o culpado o jogo acaba (valendo mais ou menos pontos de acordo com a etapa).
     -> Há 7 suspeitos no total, inicialmente todos são igualmente suspeitos.
     -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente.
-    -> Há um total de 17 pistas baseadas nos álibis obtidos.
+    -> Há um total de 24 pistas baseadas nos álibis obtidos.
     -> Ao escolher apontar um suspeito, todas suas pistas serao exibidas para auxilia-lo, porem se
         errar 2 pontos possiveis.
     -> Ao pular para a próxima etapa, diminuirá 1 ponto possível.
@@ -47,8 +47,8 @@ prop = {
     "GB-1":"Documentou valores até 9 PM.",
     "GB-2":"Trancou o cofre 9 PM.",
     "GB-3":"Documentou os valores e foi embora 8:55 PM.",
-    "Q-1" :"O cofre estava trancado.",
-    "Q-2" :"Nao houve roubo.",
+    "CT" :"O cofre estava trancado.",
+    "NR" :"Nao houve roubo.",
     "L-1" :"A luz caiu entre 12 PM e 2 AM.",
     "C-1" :"Não há cameras ligadas.",
     "C-2" :"Cameras voltaram 30 min após ligar o gerador."
@@ -56,18 +56,18 @@ prop = {
 
 clues = [
     "(P1)  Se A1 foi ao médico 7:30 PM, então A1 saiu mais cedo as 7:15PM (A1-2 -> A1-1)",
-    "(P2)  Se Z viu todos os funcionário, então Z chegou as 8PM (Z-2 -> Z-1)",
-    "(P3)  Ou A1 saiu mais cedo ou Z chegou as 8PM (~A1-1 v ~Z-1)",
-    "(P4)  Z chegou as 8 PM (Z-1)",
+    "(P2)  Se Z chegou as 8PM, então Z viu todos os funcionários (Z-2 -> Z-1)",
+    "(P3)  A1 saiu mais cedo as 7:15 PM ou Z chegou as 8 PM para limpeza (A1-1 v Z-1)",
+    "(P4)  Z viu todos os funcionários(Z-2)",
     
-    "(P5)  Z viu todos os funcionários(Z-2)",
+    "(P5)  G2 não verificou os ambientes internos.",
     "(P6)  Se G1 fechou o banco, entao G2 verificou os ambientes internos (G1-1 -> G2-1)",
     "(P7)  Se A2 saiu as 8:20 PM, entao A3 saiu com ele (A2-1 -> A3-1)",
     "(P8)  A2 saiu 8:20 PM (A2-1)",
     
-    "(P9)  Se o cofre estava trancado, entao nao houve roubo (Q-1 -> Q-2)",
+    "(P9)  Se o cofre estava trancado, entao nao houve roubo (CT -> NR)",
     "(P10) Se GB documentou os valores ate 9 PM, entao GB trancou o cofre 9PM (GB-1 -> GB-2)",
-    "(P11) Ou houve roubo ou GB nao documentou os valores (~Q-2 v ~GB--1)",
+    "(P11) Nao houve roubo ou GB documentou os valores (Q-2 v GB-1)",
     "(P12) GB documentou os valores (GB-1)",
     
     "(P13) Se a luz caiu, entao as cameras desligaram (L-1 -> C1)",
@@ -76,12 +76,13 @@ clues = [
     "(P16) Se G1 verificou o quadro de luz, entao G1 ligou o gerador de emergencia (G1-2 -> G1-3)",
 
     "(P17) Se G1 ligou o gerador de emergencia, entao as cameras voltaram 1 PM (G1-3 -> C-2)",
-    "(P18) Se A1 ligou para GB, então GB saiu mais cedo.",
+    "(P19) Se A2 estava com A3, entao ambos sao inocentes (A23-1 -> A23-2)",
+    "(P20) Se G1 ligou o gerador de emergência, entao G1 e inocente. (G1-3 -> G1-4)",
+    "(P21) Se G1 e inocente, entao G2 tambem e inocente",
     
-    "(P19) Se ... entao A1 roubou",
-    "(P20) Se ... entao Z roubou",
-    "(P20) Se ... entao GB roubou",
-    "(P20) Se ... entao G1 roubou",
+    "(P22) Se a luz caiu, entao Z foi para casa",
+    "(P23) Se Z foi para casa, entao Z e inocente",
+    "(P24) Se GB documentou os valores, entao GB e inocente",
 ]
 
 solution = [
@@ -132,7 +133,7 @@ solution = [
 ]
 
 my_clues = []
-score = 10
+score = 20
 
 def get_choice_game():
     choice = int(input("Digite [1] para continuar ou [0] para encerrar o program: "))
@@ -144,7 +145,7 @@ def get_choice_game():
         get_choice_game()
 
 def game_step_msg(step: int):
-    if 1 <= step <=3:
+    if 1 <= step <=5:
         print(f"|----------------------------------------ETAPA {step}----------------------------------------|")
         print(f"As 4 pistas desta etapa estao em ordem cronológica, certifiquue-se de presetar atencao aos detalhes\n")
     else:
@@ -164,11 +165,18 @@ def list_suspects():
 
 def show_clues(max: int = 4):
     print("\nAs pistas desta etapa sao:")
-    for _ in range(max):
-        item = clues[0]
-        clues.remove(item)
-        my_clues.append(item)
-        print(f"{item}")
+    if len(clues) < 4:
+        for i in range(len(clues)):
+            item = clues[0]
+            clues.remove(item)
+            my_clues.append(item)
+            print(f"{item}")
+    else:
+        for _ in range(max):
+            item = clues[0]
+            clues.remove(item)
+            my_clues.append(item)
+            print(f"{item}")
 
 def indica_culpado(step: int):
     global score
@@ -182,7 +190,7 @@ def indica_culpado(step: int):
         print("PARABENS VOCE ADIVINHOU QUEM E O RESPONSAVEL PELO CRIME!!!")
         print(f"GANHOU O JOGO NA ETAPA {step}, CONTABILIZANDO {score} PONTOS.")
         quit()
-    elif step == 4:
+    elif step == 6:
         print("""Voce nao conseguiu adivinhar quem foi responsavel pelo crime.
         Tente novamente ou finalize o jogo para ver a solução.""")
         choice = int(input("[1] para ver a solucao ou [0] para finalizar:"))
@@ -202,14 +210,27 @@ def indica_culpado(step: int):
 
 def get_choice_sus(step: int):
     global score
-    choice = int(input("Digite [1] para continuar ou [0] para indicar um suspeito:"))
-    os.system("cls")
-    if choice == 0:
-        indica_culpado(step)
+    if 1 <= step <= 5:
+        choice = int(input("Digite [1] para continuar ou [0] para indicar um suspeito:"))
+        os.system("cls")
+        if choice == 0:
+            indica_culpado(step)
 
-    elif choice < 0 or choice >= 2:
-        print("Ops! Não é uma das opções!")
-        get_choice_sus()
+        elif choice < 0 or choice >= 2:
+            print("Ops! Não é uma das opções!")
+            get_choice_sus()
+        else:
+            score = score - 1 
+
+    elif step == 6:
+        choice = int(input("Digite [1] para indicar um suspeito ou [0] para encerrar o programa:"))
+        os.system("cls")
+        if choice == 1:
+            indica_culpado(step)
+
+        elif choice < 0 or choice >= 2:
+            print("Ops! Não é uma das opções!")
+            get_choice_sus()
     
     else:
         score = score - 1 
@@ -221,7 +242,7 @@ get_choice_game()
 print(msg_rules)
 get_choice_game()
 
-for i in range(4):
+for i in range(6):
     i = i + 1
     game_step_msg(i)
     get_suspects()
