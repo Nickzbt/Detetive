@@ -1,0 +1,60 @@
+(Le-2 -> Le-1)
+(An-2 -> An-1)
+(~Le-1 v ~An-1)
+(An-2)
+(~Ad-1)
+(Ni-1 -> Ad-1)
+(Fr-1 -> Lo-1)
+(Fr-1)
+(CT -> ~HR)
+(Ca-1 -> Ca-2)
+(~HR v Ca-1)
+(Ca-1)
+(Lu -> Cm-2)
+(Lu)
+(Lu -> Ni-2)
+(Ni-2 -> Ni-3)
+(Ni-3 -> Cm-1)
+((Fr-1 -> Lo-1) -> (IFr -> ILo))
+(Ni-3 -> INi)
+(INi -> IAd)
+(Lu -> An-3)
+(An-3 -> IAn)
+(Ca-1 -> ICa)
+(ILe -> Le-2)
+-----------
+(An-1)                   | MP[l2-l4]
+(~An-1 v ~Le-1)          | COMT[l3]
+(An-1 -> ~Le-1)          | CONT-I[l27]
+(~Le-1)                  | MP[l28-l26]
+(~Le-2)                  | MT[l1-l29]
+# (~ILe)                   | MT[l24-l30]
+|===========|
+Conc: ~ILe
+|===========|
+[x] "Le-1":"Saiu mais cedo as 7:15 PM.",
+[x] "Le-2":"Foi ao médico as 7:30 PM.",
+[x] "Ni-1":"Fechou o banco as 8 PM.",
+[o] "Ni-2":"Conferiu o quadro de luz apos a queda da luz.",
+[o] "Ni-3":"Ligou o gerador de emergência.", 
+[x] "Ad-1":"Verificou os ambientes internos.",
+[o] "An-1":"Chegou 8 PM para a limpeza.",
+[o] "An-2":"Viu todos os funcionários no banco.",
+[o] "An-3":"Anastácia foi para casa as 2 AM.",
+[o] "Fr-1":"Saiu junto de Lourenço as 8:20 PM.",
+[o] "Lo-1":"Saiu junto de Francesca as 8:20 PM.",
+[o] "Ca-1":"Documentou valores até 9 PM.",
+[o] "Ca-2":"Trancou o cofre as 9 PM.",
+[ ] "CT"  :"O cofre estava trancado.",
+[ ] "HR"  :"Houve roubo.",
+[o] "Lu"  :"A luz caiu entre 12 PM e 2 AM.",
+[o] "Cm-1":"Voltaram 30 min após ligar o gerador.",
+[o] "Cm-2":"As câmeras desligaram.",
+[ ] "IFr" :"Francesca é inocente.",
+[ ] "ILo" :"Lourenço é inocente.",
+[o] "INi" :"Nicola é inocente.",
+[o] "IAd" :"Adam é inocente.",
+[o] "IAn" :"Anastácia é inocente.",
+[o] "ICa" :"Carolina é inocente.",
+[x] "ILe" :"Lena é inocente.",
+|===========|
