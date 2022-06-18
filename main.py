@@ -9,14 +9,14 @@ msg_init = ("""|----------------------------------------JOGO DE DETETIVE--------
 
 msg_rules = ("""|-----------------------------------------REGRAS DO JOGO-----------------------------------------|
     -> O jogo possui até 4 etapas, cada qual será dada ao jogador um conjunto de hipoteses/pistas.
-    -> As três etapas iniciais fornecem 4 pistas cada, a ultima etapa fornecerá as pistas restantes.
+    -> As etapas iniciais fornecem 4 pistas cada, a ultima etapa fornecerá as pistas restantes.
     -> Em cada etapa há a chance de se apontar o culpado ou passar para a próxima.
     -> Acertando o culpado o jogo acaba (valendo mais ou menos pontos de acordo com a etapa).
     -> Há 7 suspeitos no total, inicialmente todos são igualmente suspeitos.
     -> Partindo dos 7 suspeitos cada um apresentou álibis sobre o dia do incidente.
     -> Há um total de 24 pistas baseadas nos álibis obtidos.
-    -> Ao escolher apontar um suspeito, todas suas pistas serao exibidas para auxilia-lo, porem se
-        errar perderá 2 pontos possiveis.
+    -> Ao escolher apontar um suspeito, todas suas pistas serão exibidas para auxiliá-lo, porém se
+        errar perderá 2 pontos.
     -> Ao pular para a próxima etapa, diminuirá 1 ponto possível.
     -> Apenas um dos suspeitos é o culpado.
 """)
@@ -118,12 +118,12 @@ def show_clues(max: int = 4):
 
 def indica_culpado(step: int):
     global score
-    print("Suas pistas atá o momento são:")
+    print("Suas pistas até o momento são:")
     for i in my_clues:
         print(i)
     list_suspects()
     culpado = int(input("Insira o número do culpado: "))
-    if suspects[culpado] == "Lena (Le)":
+    if suspects[culpado] == "Lena":
         os.system("cls")
         print("PARABÉNS VOCÊ ADIVINHOU QUEM É O RESPONSAVEL PELO CRIME!!!")
         print(f"GANHOU O JOGO NA ETAPA {step}, CONTABILIZANDO {score} PONTOS.")
