@@ -22,106 +22,54 @@ msg_rules = ("""|-----------------------------------------REGRAS DO JOGO--------
 """)
 
 suspects = [
-    "Nicola (Ni)",
-    "Adam (Ad)",
-    "Anastácia (An)",
-    "Carolina (Ca)",
-    "Lena (Le)",
-    "Francesca (Fr)",
-    "Lourenço (Lo)",
+    "Nicola",
+    "Adam",
+    "Anastácia",
+    "Carolina",
+    "Lena",
+    "Francesca",
+    "Lourenço",
 ]
 
-prop = {
-    "Le-1":"Saiu mais cedo as 7:15 PM.",
-    "Le-2":"Foi ao médico as 7:30 PM.",
-    "Le-3":"Ligou para Carolina as 8:50 PM.",
-    "Ni-1":"Fechou o banco as 8 PM.",
-    "Ni-2":"Conferiu o quadro de luz apos a queda da luz.",
-    "Ni-3":"Ligou o gerador de emergência.", 
-    "Ad-1":"Verificou os ambientes internos.",
-    "Ad-2":"Fez uma ronda no banco após a queda da luz.",
-    "An-1":"Chegou 8 PM para a limpeza.",
-    "An-2":"Viu todos os funcionários no banco.",
-    "Fr-1":"Saiu junto de Lourenço as 8:20 PM.",
-    "Lo-1":"Saiu junto de Francesca as 8:20 PM.",
-    "Ca-1":"Documentou valores até 9 PM.",
-    "Ca-2":"Trancou o cofre as 9 PM.",
-    "Ca-3":"Documentou os valores e foi embora as 8:55 PM.",
-    "CT"  :"O cofre estava trancado.",
-    "NR"  :"Não houve roubo.",
-    "Lu-1" :"A luz caiu entre 12 PM e 2 AM.",
-    "Cv" :"Câmeras voltaram 30 min após ligar o gerador."
-}
-
 clues = [
-    "(P1)  Se Lena Foi ao médico, então Lena saiu mais cedo as 7:15PM (Le-2 -> Le-1)",
-    "(P2)  Se Anastácia chegou as 8 PM no banco, então Anastácia viu todos os funcionários (An-2 -> An-1)",
-    "(P3)  Lena saiu mais cedo as 7:15 PM ou Anastácia chegou as 8 PM para limpeza (Le-1 v An-1)",
-    "(P4)  Anastácia viu todos os funcionários (An-2)",
+    "(P1)  Se Lena foi ao médico, então Lena saiu mais cedo as 7:15PM",
+    "(P2)  Se Anastácia chegou as 8 PM no banco, então Anastácia viu todos os funcionários",
+    "(P3)  Lena não saiu mais cedo as 7:15 PM ou Anastácia não chegou as 8 PM para limpeza",
+    "(P4)  Anastácia viu todos os funcionários",
     
-    "(P5)  Adam não verificou os ambientes internos.",
-    "(P6)  Se Nicola fechou o banco, então Adam verificou os ambientes internos (Ni-1 -> Ad-1)",
-    "(P7)  Se Francesca saiu, então Lourenço saiu com ele (Fr-1 -> Lo-1)",
-    "(P8)  Francesca saiu as 8:20 PM (Fr-1)",
+    "(P5)  Adam não verificou os ambientes internos",
+    "(P6)  Se Nicola fechou o banco, então Adam verificou os ambientes internos",
+    "(P7)  Se Francesca saiu, então Lourenço saiu com ele",
+    "(P8)  Francesca saiu as 8:20 PM",
     
-    "(P9)  Se o cofre estava trancado, então nao houve roubo (CT -> NR)",
-    "(P10) Se Carolina documentou os valores ate 9 PM, então Carolina trancou o cofre 9PM (Ca-1 -> Ca-2)",
-    "(P11) Nao houve roubo ou Carolina documentou os valores (Q-2 v Ca-1)",
-    "(P12) Carolina documentou os valores (Ca-1)",
+    "(P9)  Se o cofre estava trancado, então nao houve roubo",
+    "(P10) Se Carolina documentou os valores ate 9 PM, então Carolina trancou o cofre 9PM",
+    "(P11) Nao houve roubo ou Carolina documentou os valores",
+    "(P12) Carolina documentou os valores",
     
-    "(P13) Se a luz caiu, então as câmeras desligaram (Lu-1 -> C1)",
-    "(P14) A luz caiu entre 12 PM e 2 AM (Lu-1)",
-    "(P15) Se a luz caiu, então Nicola verificou o quadro de luz (Lu-1 -> Ni-2)",
-    "(P16) Se Nicola verificou o quadro de luz, então Nicola ligou o gerador de emergência (Ni-2 -> Ni-3)",
+    "(P13) Se a luz caiu, então as câmeras desligaram",
+    "(P14) A luz caiu entre 12 PM e 2 AM",
+    "(P15) Se a luz caiu, então Nicola verificou o quadro de luz",
+    "(P16) Se Nicola verificou o quadro de luz, então Nicola ligou o gerador de emergência",
 
-    "(P17) Se Nicola ligou o gerador de emergência, então as câmeras voltaram as 1 PM (Ni-3 -> Cv)",
-    "(P19) Se Francesca estava com Lourenço, então ambos são inocentes (Fr-1 -> Lo-2)",
-    "(P20) Se Nicola ligou o gerador de emergência, então Nicola é inocente. (Ni-3 -> Ni-4)",
-    "(P21) Se Nicola é inocente, então Adam tambem é",
+    "(P17) Se Nicola ligou o gerador de emergência, então as câmeras voltaram as 1 PM",
+    "(P18) Se Francesca estava com Lourenço, então ambos são inocentes",
+    "(P19) Se Nicola ligou o gerador de emergência, então Nicola é inocente",
+    "(P20) Se Nicola é inocente, então Adam tambem é",
     
-    "(P22) Se a luz caiu, então Anastácia foi para casa",
-    "(P23) Se Anastácia foi para casa, então Anastácia é inocente",
-    "(P24) Se Carolina documentou os valores, então Carolina é inocente",
+    "(P21) Se a luz caiu, então Anastácia foi para casa as 2 AM",
+    "(P22) Se Anastácia foi para casa, então Anastácia é inocente",
+    "(P23) Se Carolina documentou os valores, então Carolina é inocente",
+    "(P24) Se Lena é inocente, então Lena foi ao médico",
 ]
 
 solution = [
-    ("""
-    ----Dilema destrutivo----
-        (Le-2 -> Le-1)
-        (An-2 -> An-1)
-        (~Le-1 v ~An-1)
-        ---------------
-        (~Le-2 v ~An-2)
-    """),
-    ("""
-    ----Silogismo disjuntivo
-        (~Le-2 v ~An-2)
-        (An-2)
-        ---------------
-        ~Le-2
-    """),
-    ("""
-    ----Dilema destrutivo
-        (Q-1 -> Q-2)
-        (Ca-1 -> Ca-2)
-        (~Q-2 v ~Ca-2)
-        ---------------
-        (~Q-1 v ~Ca-1)
-    """),
-    ("""
-    ----Silogismo disjuntivo
-        (~Q-1 v ~Ca-1)
-        (Ca-1)
-        ---------------
-        (~Q-1)
-    """),
-    ("""
-    ----Modus ponens----
-        (Ni-3 -> Cv)
-        (Ni-3)
-        ---------------
-        (Cv)
-    """)
+    "(P25) An-1          | MP[P2-P4]",
+    "(P26) ~An-1 v ~Le-1 | COMT[P3]",
+    "(P27) An-1 -> ~Le-1 | CONT-I[P26]",
+    "(P28) ~Le-1         | MP[P27-P25]",
+    "(P29) ~Le-2         | MT[P1-P28]",
+    "* (P30) ~ILe         | MT[P24-P29] *",
 ]
 
 my_clues = []
@@ -141,8 +89,8 @@ def game_step_msg(step: int):
     if 1 <= step <=5:
         print(f"As 4 pistas desta etapa estao em ordem cronológica, certifiquue-se de presetar atencao aos detalhes\n")
     else:
-        print("ATENÇAO!! Ultima etapa para adivinhar o suspeito, encontre o culpado ou o mesmo saira impune")
-        print("Estas sao as ultimas pistas para que voce resolva o caso, preste atencao aos detalhes\n")
+        print("ATENÇÃO!! Última etapa para adivinhar o suspeito, encontre o culpado ou o mesmo sairá impune")
+        print("Essas sao as últimas pistas para que você resolva o caso, preste atenção aos detalhes!\n")
 
 def show_suspects():
     print("Os suspeitos atuais são:")
