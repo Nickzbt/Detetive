@@ -8,7 +8,7 @@
 
 ### REGRAS
 
-- O jogo possui até 4 etapas, cada qual será dada ao jogador um conjunto de hipoteses/pistas.
+- O jogo possui até 6 etapas, cada qual será dada ao jogador um conjunto de hipoteses/pistas.
 - As etapas iniciais fornecem 4 pistas cada, a ultima etapa fornecerá as pistas restantes.
 - Em cada etapa há a chance de se apontar o culpado ou passar para a próxima.
 - Acertando o culpado o jogo acaba (valendo mais ou menos pontos de acordo com a etapa).
